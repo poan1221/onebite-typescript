@@ -1,2 +1,5 @@
-console.log("안녕하세요! 주니어 프론트 개발자 haaa 입니다. 잠시 일을 쉬면서 취준을 하고 있어요. 한입 타입스크립트 들으려고 사놨다고 다 완강하지 못해서 이번 기회를 통해 알차게 완강하고 완전이 이해하고 싶습니다. 모두 화이팅해요!!!");
-const a: number = 1;
+// const func = () => console.log("Hello Test");
+
+import { hello } from "./hello";
+
+hello("이건 어때");
