@@ -110,3 +110,65 @@ let arr: (number | string | boolean)[] = [1, "hello", true];
     - 타입 넓히기
         - 넘버 리터럴 등에서 상수를 추론하듯이 그대로 추론하지 않고, number 타입으로 추론하는 과정
         - const 로 선언한 상수가 아니면 타입 넓히기를 통해 범용적으로 변수를 사용할 수 있도록 추론 함
+
+## 6. 타입 단언
+
+- `값 as 타입` 으로 특정 값을 원하는 타입으로 단언하는 것
+- 초과 프로퍼티 검사를 피하거나, 빈 객체로 먼저 넣어두고 진행하고 싶을 때 사용함
+- 타입 업케스팅/다운케스팅 과 변개로 타입스크립트의 눈을 가리는 느낌이라, 사용에 유의해야 함
+
+- 타입 단언의 조건
+    - A as B 로 단언 할 때, A가 B의 슈퍼타입 이거나 서브타입 이어야 한다.
+- 다중 단언
+    - 왼쪽에서 오른쪽으로 단언을 진행(하여 여러 타입을 거쳐 최종적으로 다른 타입으로 변경하는 것.. )
+    - 슈퍼 - 서브 관계를 갖지 않는 타입으로 단언하면 오류가 발생할 확률이 매우 높으므로 매우 좋지 않은 방식
+    - 최대한 사용하지 않고 어쩔 수 없는 경우에만 이용하기를 권장
+    
+    ```tsx
+    let num3 = 10 as unknown as string;
+    // number 타입의 값을 unknown 타입으로 단언 -> unknown 타입의 값을 string 타입으로 단언
+    ```
+    
+- const 단언
+    - 마치 const 로 변수를 선언한것과 같은 비슷하게 변경됨
+    - 객체의 경우 모든 프로퍼티가 readonly 로 변경됨
+- Non Null 단언
+    - undefined이거나 null이 아닐것으로 단언
+    - 값 뒤에 ! 를 붙임 → 즉, 필수값 표시
+    
+
+## 7. 타입 좁히기
+
+- 조건문 등을 이용하여 넓은 타입에서 좁은 타입으로 타입을 상황에 따라 좁히는 방법
+- 타입 가드 : `if (typeof === …)` 조건문 등을 사용해 타입을 좁히는 표현
+    - instanceof 타입 가드
+        - 내장 클래스 타입을 보장하는지 확인하여 타입 좁히기를 진행
+        - `값 instanceof 내장 클래스 타입`
+    - in 타입 가드
+        - 직접 만든 타입과 사용하여 타입 좁히기를 진행
+        - 값 안에 해당 프로퍼티가 있는지 등을 확인하는 것으로 함.
+        - 이때 값은 null 이면 안된다면, `값 && "프로퍼티" in 값` 으로 표기하여 값이 있고, 그 값 안에 해당 프로퍼티가 있는지로 체크
+
+```tsx
+type Person = {
+  name: string;
+  age: number;
+};
+
+function func(value: number | string | Date | null | Person) {
+  if (typeof value === "number") {
+    console.log(value.toFixed());
+  } else if (typeof value === "string") {
+    console.log(value.toUpperCase());
+  } else if (value instanceof Date) {
+    console.log(value.getTime());
+  } else if (value && "age" in value) {
+    console.log(`${value.name}은 ${value.age}살 입니다`)
+  }
+}
+```
+
+## 8. 서로소 유니온 타입
+
+- 교집합이 없는 타입들로만 만든 유니온 타입
+- 태그를 붙여 객체를 완벽히 구분지어 사용하여, 태그드 유니온이라고도 함.
