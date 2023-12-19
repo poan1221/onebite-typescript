@@ -21,3 +21,34 @@
 - 튜플인 경우,
   - 각 인덱스에 있는 타입을 가져옴.
   - 인덱스를 지정하지 않고, number 로 넣을 경우 튜플 타입 안에 있는 모든 타입의 최적의 공통 타입을 뽑아 옴 = 유니온 타입으로.
+
+## 2. Keyof 연산자
+
+- 객체 타입으로부터 프로퍼티의 모든 key들을 String Literal Union 타입으로 추출하는 연산자
+  - 매개변수로 넘겨야 하는데, 객체 프로퍼티들을 모두 나열하며 유니온 타입으로 할 수 없을 때 사용
+  - 아래 예시에서, `key: "name" | "age"` 대신 `keyof Person` 으로 정의 → 새로운 프로퍼티가 추가, 수정 시에도 변경없이 사용 할 수 있음.
+  ```tsx
+  interface Person {
+    name: string;
+    age: number;
+  }
+
+  //function getPropertyKey(person: Person, key: "name" | "age") {
+  //  return person[key];
+  //}
+
+  function getPropertyKey(person: Person, key: keyof Person) {
+    return person[key];
+  }
+  ```
+  - typeof 연산자(특정 값의 타입을 문자열로 반환 → 타입 정의 시에는 특정 변수의 타입을 추론)와 함께 사용도 가능
+
+## 3. mapped 타입
+
+- 기존의 객체 타입을 기반으로 새로운 객체 타입을 만드는 기능
+- 언터페이스에서는 사용할 수 없고, 타입 별칭으로만 사용
+- 선택적 프로퍼티, 읽기전용 프로퍼티로 변경 / 값의 타입 변경 등을 위해 사용하여 새로운 객체 타이블 만듬
+
+## 4. 템플릿 리터럴 타입
+
+- 스트링 리터럴 타입들을 기반으로 특정 패턴을 갖는 문자열 타입들을 만드는 기능
